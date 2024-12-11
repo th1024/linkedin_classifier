@@ -72,4 +72,10 @@ if st.sidebar.button("Predict"):
         **{probability:.2%}**
         """
     )
-    st.progress(int(probability * 100))
+    progress_color = "green" if probability > 0.75 else "red" if probability < 0.25 else "#f0ad4e"
+    st.markdown(
+        f"""
+        <div style="height: 25px; background-color: {progress_color}; width: {int(probability * 100)}%; text-align: center; color: white;">{int(probability * 100)}%</div>
+        """,
+        unsafe_allow_html=True
+    )
