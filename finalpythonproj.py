@@ -65,4 +65,11 @@ age = st.sidebar.slider("Age", min_value=18, max_value=98, value=30, step=1)
 
 if st.sidebar.button("Predict"): 
     probability = predict_linkedin_usage(log_reg, income, education, parent, married, female, age)
-    st.write(f"The probability of LinkedIn usage is: {probability:.2f}")
+    st.markdown(
+        f"""
+        ### Prediction Result
+        The probability of LinkedIn usage is: 
+        **{probability:.2%}**
+        """
+    )
+    st.progress(int(probability * 100))
