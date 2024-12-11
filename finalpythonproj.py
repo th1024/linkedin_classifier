@@ -5,6 +5,7 @@ from sklearn.metrics import accuracy_score, confusion_matrix, ConfusionMatrixDis
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
+import streamlit as st
 
 def clean_sm(x): #Convert 1 to 1, and everything else to 0.
     return np.where(x == 1, 1, 0)
@@ -48,5 +49,20 @@ X_train, X_test, y_train, y_test = train_test_split(
 log_reg = LogisticRegression(class_weight='balanced', random_state=42)
 log_reg.fit(X_train, y_train)
 
-prob_42 = predict_linkedin_usage(log_reg, income=8, education=7, parent=0, married=1, female=1, age=42)
-print(f"Probability of LinkedIn usage (42 years old): {prob_42:.2f}")
+# Streamlit app
+st.title("Predict LinkedIn Usage")
+
+st.sidebar.header("Input Features")
+income = st.sidebar.slider("Income (1-9)", min_value=1, max_value=9, value=5, step=1)
+education = st.sidebar.slider("Education (1-8)", min_value=1, max_value=8, value=4, step=1)
+parent = st.sidebar.selectbox("Are you a parent?", options=["No", "Yes"], index=0)
+parent = 1 if parent == "Yes" else 0
+married = st.sidebar.selectbox("Are you married?", options=["No", "Yes"], index=0)
+married = 1 if married == "Yes" else 0
+female = st.sidebar.selectbox("Gender", options=["Male", "Female"], index=0)
+female = 1 if female == "Female" else 0
+age = st.sidebar.slider("Age", min_value=18, max_value=98, value=30, step=1)
+
+if st.sidebar.button("Predict"): 
+    probability = predict_linkedin_usage(log_reg, income, education, parent, married, female, age)
+    st.write(f"The probability of LinkedIn usage is: {probability:.2f}")
